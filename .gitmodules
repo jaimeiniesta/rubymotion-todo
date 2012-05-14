@@ -1,0 +1,9 @@
+[submodule "vendor/BubbleWrap"]
+	path = vendor/BubbleWrap
+	url = https://github.com/mattetti/BubbleWrap.git
+[submodule "vendor/NanoStore"]
+	path = vendor/NanoStore
+	url = https://github.com/tciuro/NanoStore.git
+[submodule "vendor/NanoStoreInMotion"]
+	path = vendor/NanoStoreInMotion
+	url = https://github.com/siuying/NanoStoreInMotion.git
