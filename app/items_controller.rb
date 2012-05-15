@@ -1,6 +1,13 @@
 class ItemsController < UITableViewController
+  def init
+    super
+    @items = []
+    self
+  end
+  
   def load
-    @item = Item.all.sort { |a,b| a.row.to_i <=> b.row.to_i }
+    # we could use NanoStore sorting here, but wait until NanoStoreInMotion implement that
+    @items = Item.all.sort {|a,b| a.created_at.is_a?(Time) && b.created_at.is_a?(Time) ? (a.created_at <=> b.created_at) : (a.title <=> b.title) }
     self.view.reloadData
   end
   
@@ -14,19 +21,19 @@ class ItemsController < UITableViewController
   end
   
   def viewDidUnload
-    @item = nil
+    @items = nil
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
-    @item.size
+    @items.size
   end
 
   def tableView(tableView, cellForRowAtIndexPath:indexPath)
-    ItemCell.cellForItem(@item[indexPath[1]], inTableView:tableView)
+    ItemCell.cellForItem(@items[indexPath[1]], inTableView:tableView)
   end
 
   def searchBarSearchButtonClicked(searchBar)
-    Item.create(:title => searchBar.text, :row => Item.all.size)
+    Item.create(:title => searchBar.text, :created_at => Time.now)
     load
     searchBar.text = nil
     searchBar.resignFirstResponder
