@@ -4,22 +4,16 @@ class ItemsController < UITableViewController
     @items = []
     self
   end
-  
-  def load
-    # we could use NanoStore sorting here, but wait until NanoStoreInMotion implement that
-    @items = Item.all.sort {|a,b| a.created_at.is_a?(Time) && b.created_at.is_a?(Time) ? (a.created_at <=> b.created_at) : (a.title <=> b.title) }
-    self.view.reloadData
-  end
-  
+
   def viewDidLoad
     searchBar = UISearchBar.alloc.initWithFrame(CGRectMake(0, 0, self.tableView.frame.size.width, 0))
     searchBar.delegate = self;
     searchBar.showsCancelButton = true;
     searchBar.sizeToFit
     view.tableHeaderView = searchBar
-    load
+    load_items
   end
-  
+
   def viewDidUnload
     @items = nil
   end
@@ -34,12 +28,20 @@ class ItemsController < UITableViewController
 
   def searchBarSearchButtonClicked(searchBar)
     Item.create(:title => searchBar.text, :created_at => Time.now)
-    load
+    load_items
     searchBar.text = nil
     searchBar.resignFirstResponder
   end
 
   def searchBarCancelButtonClicked(searchBar)
     searchBar.resignFirstResponder
+  end
+
+  private
+
+  def load_items
+    # we could use NanoStore sorting here, but wait until NanoStoreInMotion implement that
+    @items = Item.all.sort {|a,b| a.created_at.is_a?(Time) && b.created_at.is_a?(Time) ? (a.created_at <=> b.created_at) : (a.title <=> b.title) }
+    self.view.reloadData
   end
 end
