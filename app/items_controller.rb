@@ -11,7 +11,7 @@ class ItemsController < UITableViewController
     searchBar.showsCancelButton = true;
     searchBar.sizeToFit
     view.tableHeaderView = searchBar
-    load_items
+    @items = Item.all.sort {|a,b| a.created_at <=> b.created_at}
   end
 
   def viewDidUnload
@@ -27,21 +27,13 @@ class ItemsController < UITableViewController
   end
 
   def searchBarSearchButtonClicked(searchBar)
-    Item.create(:title => searchBar.text, :created_at => Time.now)
-    load_items
+    @items << Item.create(:title => searchBar.text, :created_at => Time.now)
+    self.view.reloadData
     searchBar.text = nil
     searchBar.resignFirstResponder
   end
 
   def searchBarCancelButtonClicked(searchBar)
     searchBar.resignFirstResponder
-  end
-
-  private
-
-  def load_items
-    # we could use NanoStore sorting here, but wait until NanoStoreInMotion implement that
-    @items = Item.all.sort {|a,b| a.created_at.is_a?(Time) && b.created_at.is_a?(Time) ? (a.created_at <=> b.created_at) : (a.title <=> b.title) }
-    self.view.reloadData
   end
 end
