@@ -1,4 +1,4 @@
 class Item < NanoStore::Model
   attribute :title
-  attribute :row
+  attribute :created_at
 end
